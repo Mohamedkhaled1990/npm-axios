@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="./node_modules/axios/dist/axios.js"></script>
+</head>
+<style>
+    body {
+        background: linear-gradient(45deg, rgb(0, 0, 113), rgb(96, 0, 0));
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    }
+
+
+    #user {
+        background-color: white;
+        border-radius: 100px;
+        padding: 10px;
+        padding-left: 20px;
+        font-size: 20px;
+        box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
+        cursor: pointer;
+        margin-top: 15px;
+    }
+
+    #user.selected {
+        border: orange 5px solid;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        margin: 0px;
+    }
+
+
+    #post {
+        background-color: white;
+        border-radius: 10px;
+        font-size: 20px;
+        padding: 20px;
+        border-bottom: 2px solid black;
+    }
+</style>
+
+<body>
+
+    <div id="content" style="display: flex;">
+        <!-- userrs container -->
+        <div style="width: 30% ;  ">
+
+
+            <!-- users container -->
+            <div style="height: 100px; width: 90%; margin: 0 auto;" id="users">
+
+                <!-- user -->
+                <div id="user" style="margin-top: 5px;">
+
+                    <h3>mohamed</h3>
+                    <h4>mo.net@ms</h4>
+
+
+                </div>
+                <div id="user" style="margin-top: 5px;" class="selected">
+
+                    <h3>mohamed</h3>
+                    <h4>mo.net@ms</h4>
+
+
+                </div>
+                <div id="user" style="margin-top: 5px;">
+
+                    <h3>mohamed</h3>
+                    <h4>mo.net@ms</h4>
+
+
+                </div>
+                <div id="user" style="margin-top: 5px;">
+
+                    <h3>mohamed</h3>
+                    <h4>mo.net@ms</h4>
+
+
+                </div>
+
+
+                <!-- user -->
+
+
+
+            </div>
+            <!-- users container -->
+
+        </div>
+        <!-- users container -->
+        <!-- posts container -->
+
+        <div id="posts-container" style=" width: 70%; background-color: rgb(236, 236, 236); padding: 20px 0px; ">
+            <div id="posts" style="width: 90%;">
+                <!-- posts -->
+                <div id="post" style="width: 90%; margin: 0px auto;">
+                    <h3>hello world</h3>
+                    <h4>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nostrum aliquid fuga officiis minus
+                        nesciunt excepturi veritatis sint architecto omnis repellat ducimus temporibus magni, odit
+                        facere
+                        est? Perspiciatis corporis dolore et.</h4>
+
+                </div>
+                <div id="post" style="width: 90%; margin: 0px auto;">
+                    <h3>hello world</h3>
+                    <h4>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nostrum aliquid fuga officiis minus
+                        nesciunt excepturi veritatis sint architecto omnis repellat ducimus temporibus magni, odit
+                        facere
+                        est? Perspiciatis corporis dolore et.</h4>
+
+                </div>
+                <div id="post" style="width: 90%; margin: 0px auto;">
+                    <h3>hello world</h3>
+                    <h4>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nostrum aliquid fuga officiis minus
+                        nesciunt excepturi veritatis sint architecto omnis repellat ducimus temporibus magni, odit
+                        facere
+                        est? Perspiciatis corporis dolore et.</h4>
+
+                </div>
+                <div id="post" style="width: 90%; margin: 0px auto;">
+                    <h3>hello world</h3>
+                    <h4>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nostrum aliquid fuga officiis minus
+                        nesciunt excepturi veritatis sint architecto omnis repellat ducimus temporibus magni, odit
+                        facere
+                        est? Perspiciatis corporis dolore et.</h4>
+
+                </div>
+
+                <!-- posts -->
+            </div>
+
+
+
+
+        </div>
+        <!-- posts container -->
+    </div>
+    <!-- main content -->
+
+
+</body>
+
+<script>
+
+
+    function getposts(userId) {
+        fetch("https://jsonplaceholder.typicode.com/posts?userId=" + userId)
+            .then(response => {
+
+                if (response.ok) {
+                    return response.json()
+                }
+
+            })
+            .then(posts => {
+
+
+                document.getElementById("posts").innerHTML = ""
+
+                for (post of posts) {
+
+                    let content = ` 
+                        <div id="post">
+                        <h3>${post.title}</h3>
+                        <h4>${post.body}</h4>
+                    </div>
+                `
+                    document.getElementById("posts").innerHTML += content
+                }
+            })
+
+    }
+
+    function getUsers() {
+
+        return new Promise((resolve, reject) => {
+
+            fetch('https://jsonplaceholder.typicode.com/users/')
+                .then(response => {
+
+                    if (response.ok) {
+                        return response.json()
+                    }
+
+                })
+                .then(users => {
+                    document.getElementById("users").innerHTML = ""
+
+                    for (user of users) {
+
+                        let content = ` 
+                   <div id="user" onclick="userClicked(${user.id},this)">
+
+                    <h3>${user.name}</h3>
+                    <h4>${user.email}</h4>
+
+
+                </div>
+                `
+                        document.getElementById("users").innerHTML += content
+                    }
+                    resolve()
+                })
+        })
+    }
+
+
+    getUsers()
+        .then(() => {
+            getposts()
+        })
+
+
+
+    function userClicked(id, el) {
+        getposts(id)
+        let selectedElements = document.getElementsByClassName("selected")
+
+        for (element of selectedElements) {
+            element.classList.remove("selected")
+        }
+        el.classList.add("selected")
+    }
+
+
+
+
+
+</script>
+
+</html>
